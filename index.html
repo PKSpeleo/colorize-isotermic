@@ -17,9 +17,8 @@
       padding: 0;
       font-size: 18px; /* Base font size for desktop */
       display: flex;
-      justify-content: center; /* Center content horizontally */
-      align-items: center; /* Center content vertically */
-      height: 100vh;
+      flex-direction: column; /* Stack elements vertically */
+      min-height: 100vh; /* Ensure the body is at least the height of the viewport */
   }
 
   .container {
@@ -30,7 +29,7 @@
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      height: 100%;
+      flex: 1; /* Allows the container to grow and fill available space */
   }
 
   /* Header Section */
@@ -222,6 +221,25 @@
       opacity: 1;
   }
 
+  /* Footer Styles */
+  .footer {
+      text-align: center;
+      padding: 15px 0;
+      background-color: #FAFAFA; /* Very light gray background */
+      border-top: 1px solid #DDDDDD; /* Thin top border */
+      font-size: 14px;
+      color: #555555;
+  }
+
+  .footer a {
+      color: #2196F3; /* Match the Copy URL button color */
+      text-decoration: none;
+  }
+
+  .footer a:hover {
+      text-decoration: underline;
+  }
+
   /* Responsive Design */
   @media (max-width: 768px) {
       .main-content {
@@ -335,6 +353,11 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- Footer Section -->
+<div class="footer">
+  <p>View ColorizeIsotermic on <a href="https://github.com/PKSpeleo/colorize-isotermic" target="_blank">GitHub</a></p>
 </div>
 
 <script>
