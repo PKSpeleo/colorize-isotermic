@@ -3,18 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <title>Adjust Layer Hues</title>
+  <!-- Google Fonts Connection -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <style>
+  /* Basic Styles */
   body {
+      background-color: #F5F5F5; /* Light gray background */
+      color: #333333; /* Dark gray text */
+      font-family: 'Roboto', sans-serif;
       margin: 0;
+      padding: 0;
+      font-size: 18px; /* Base font size for desktop */
       display: flex;
+      justify-content: center; /* Center content horizontally */
+      align-items: center; /* Center content vertically */
       height: 100vh;
-      font-family: Arial, sans-serif;
   }
-  #image-container {
+
+  .container {
+      padding: 20px;
+      width: 100%; /* Ensures full width */
+      max-width: 1256px; /* Increased maximum width for desktops */
+      margin: 0 auto; /* Centers the container */
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+  }
+
+  /* Header Section */
+  .header {
+      text-align: center;
+      margin-bottom: 15px; /* Reduced bottom margin */
+  }
+
+  .header h1 {
+      font-size: 36px;
+      margin-bottom: 5px; /* Reduced bottom margin */
+  }
+
+  .header p {
+      font-size: 18px;
+      color: #666666;
+  }
+
+  /* Main Content: Image and Control Panel */
+  .main-content {
+      display: flex;
       flex: 1;
-      position: relative;
+      background-color: #FFFFFF; /* White background for main content */
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       overflow: hidden;
   }
+
+  /* Image Container */
+  #image-container {
+      flex: 7; /* 70% width */
+      position: relative;
+      background-color: #EFEFEF; /* Slightly darker for contrast */
+  }
+
   #image-container img {
       position: absolute;
       top: 0;
@@ -22,91 +73,129 @@
       height: 100%;
       width: auto;
   }
-  /* Set z-index values as per your earlier request */
-  #Body {
-      z-index: 1;
-  }
-  #Legs {
-      z-index: 2;
-  }
-  #Hands {
-      z-index: 3;
-  }
-  #Plates {
-      z-index: 4;
-  }
+
+  /* Control Panel */
   #controls {
-      width: 300px;
-      padding: 20px;
+      flex: 3; /* 30% width */
+      padding: 30px;
       box-sizing: border-box;
-      background-color: #f0f0f0;
-      overflow-y: auto; /* Add scroll if content overflows */
+      background-color: #FAFAFA; /* Very light gray background for control panel */
+      border-left: 1px solid #DDDDDD; /* Thin dividing line */
   }
+
   .control-group {
-      margin-bottom: 20px;
+      margin-bottom: 25px;
   }
+
   .control-group label {
       display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 16px;
+      color: #555555;
   }
+
   .input-group {
       display: flex;
       align-items: center;
   }
+
   .input-group input[type="number"] {
       width: 60px;
-      margin-right: 10px;
+      padding: 8px;
+      margin-right: 15px;
+      border: 1px solid #CCCCCC;
+      border-radius: 4px;
+      font-size: 16px;
+      background-color: #FFFFFF;
+      color: #333333;
   }
+
   .input-group input[type="range"] {
       flex: 1;
+      height: 8px;
+      -webkit-appearance: none;
+      background: #DDDDDD;
+      border-radius: 4px;
+      outline: none;
   }
-  /* Button Styles */
+
+  .input-group input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      background: #4CAF50;
+      cursor: pointer;
+      border-radius: 50%;
+      border: none;
+  }
+
+  .input-group input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      background: #4CAF50;
+      cursor: pointer;
+      border-radius: 50%;
+      border: none;
+  }
+
+  /* Button Group */
   .button-group {
       display: flex;
       justify-content: space-between;
-      margin-top: 20px;
-      flex-wrap: wrap; /* Allow buttons to wrap to the next line if necessary */
+      margin-top: 30px;
+      flex-wrap: wrap; /* Allows buttons to wrap to a new line if necessary */
   }
+
   .button-group button {
-      flex: 1 1 30%; /* Allow buttons to take up approximately 30% of the container */
-      padding: 10px 15px;
-      margin: 5px; /* Add margin around buttons for spacing */
+      flex: 1 1 30%; /* Approximately 30% width */
+      padding: 12px 20px;
+      margin: 5px;
       font-size: 16px;
       cursor: pointer;
       border: none;
-      border-radius: 5px;
-      color: #fff;
-      transition: background-color 0.3s ease;
+      border-radius: 25px;
+      color: #FFFFFF;
+      transition: background-color 0.3s ease, transform 0.2s;
   }
-  .button-group button:nth-child(1) {
-      /* Reset Button */
-      background-color: #ff4d4d;
+
+  .button-group button:hover {
+      transform: translateY(-2px);
   }
-  .button-group button:nth-child(1):hover {
-      background-color: #e60000;
+
+  .reset-button {
+      background-color: #FF6B6B; /* Soft red */
   }
-  .button-group button:nth-child(2) {
-      /* Randomize Button */
-      background-color: #4CAF50;
+
+  .reset-button:hover {
+      background-color: #FF5252;
   }
-  .button-group button:nth-child(2):hover {
-      background-color: #45a049;
+
+  .randomize-button {
+      background-color: #4CAF50; /* Soft green */
   }
-  .button-group button:nth-child(3) {
-      /* Copy URL Button */
-      background-color: #007BFF;
+
+  .randomize-button:hover {
+      background-color: #43A047;
   }
-  .button-group button:nth-child(3):hover {
-      background-color: #0056b3;
+
+  .copy-url-button {
+      background-color: #2196F3; /* Soft blue */
+      position: relative; /* For positioning the tooltip */
   }
+
+  .copy-url-button:hover {
+      background-color: #1E88E5;
+  }
+
   /* Tooltip for copy confirmation */
   .tooltip {
       visibility: hidden;
-      background-color: #333;
-      color: #fff;
+      background-color: #333333;
+      color: #FFFFFF;
       text-align: center;
-      border-radius: 5px;
+      border-radius: 4px;
       padding: 5px 10px;
       position: absolute;
       z-index: 1;
@@ -114,8 +203,9 @@
       left: 50%;
       transform: translateX(-50%);
       opacity: 0;
-      transition: opacity 0.3s;
+      font-size: 14px;
   }
+
   .tooltip::after {
       content: "";
       position: absolute;
@@ -124,61 +214,126 @@
       transform: translateX(-50%);
       border-width: 5px;
       border-style: solid;
-      border-color: #333 transparent transparent transparent; /* Arrow */
+      border-color: #333333 transparent transparent transparent; /* Arrow */
   }
-  .button-group button.copy-url-button {
-      position: relative; /* To position the tooltip */
-  }
+
   .button-group button.copy-url-button.show-tooltip .tooltip {
       visibility: visible;
       opacity: 1;
   }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+      .main-content {
+          flex-direction: column;
+      }
+
+      #controls {
+          width: 100%;
+          border-left: none;
+          border-top: 1px solid #DDDDDD;
+      }
+
+      .button-group button {
+          flex: 1 1 45%; /* Adjust button width for smaller screens */
+      }
+  }
+
+  @media (max-width: 480px) {
+      .button-group button {
+          flex: 1 1 100%; /* Full width on very small screens */
+          margin: 10px 0;
+      }
+
+      .header h1 {
+          font-size: 28px;
+      }
+
+      .header p {
+          font-size: 16px;
+      }
+
+      .control-group label {
+          font-size: 14px;
+      }
+
+      .input-group input[type="number"] {
+          width: 50px;
+          margin-right: 10px;
+          font-size: 14px;
+      }
+
+      .input-group input[type="range"] {
+          height: 6px;
+      }
+
+      .input-group input[type="range"]::-webkit-slider-thumb,
+      .input-group input[type="range"]::-moz-range-thumb {
+          width: 14px;
+          height: 14px;
+      }
+
+      .button-group button {
+          font-size: 14px;
+          padding: 10px 15px;
+      }
+  }
   </style>
 </head>
 <body>
-<div id="image-container">
-  <img id="Body" src="Body.png" alt="Body">
-  <img id="Legs" src="Legs.png" alt="Legs">
-  <img id="Hands" src="Hands.png" alt="Hands">
-  <img id="Plates" src="Plates.png" alt="Plates">
-</div>
-<div id="controls">
-  <div class="control-group">
-    <label for="Body-hue">Body Hue</label>
-    <div class="input-group">
-      <input type="number" id="Body-hue-value" min="0" max="360" value="0">
-      <input type="range" id="Body-hue" min="0" max="360" value="0">
-    </div>
+
+<div class="container">
+  <div class="header">
+    <h1>Colorize Isotermic</h1>
+    <p>Customize the hues of each layer and share your unique configuration via Link!</p>
   </div>
-  <div class="control-group">
-    <label for="Hands-hue">Hands Hue</label>
-    <div class="input-group">
-      <input type="number" id="Hands-hue-value" min="0" max="360" value="0">
-      <input type="range" id="Hands-hue" min="0" max="360" value="0">
+
+  <div class="main-content">
+    <div id="image-container">
+      <img id="Body" src="Body.png" alt="Body">
+      <img id="Legs" src="Legs.png" alt="Legs">
+      <img id="Hands" src="Hands.png" alt="Hands">
+      <img id="Plates" src="Plates.png" alt="Plates">
     </div>
-  </div>
-  <div class="control-group">
-    <label for="Legs-hue">Legs Hue</label>
-    <div class="input-group">
-      <input type="number" id="Legs-hue-value" min="0" max="360" value="0">
-      <input type="range" id="Legs-hue" min="0" max="360" value="0">
+    <div id="controls">
+      <div class="control-group">
+        <label for="Body-hue">Body Hue</label>
+        <div class="input-group">
+          <input type="number" id="Body-hue-value" min="0" max="360" value="0" aria-label="Body Hue Value">
+          <input type="range" id="Body-hue" min="0" max="360" value="0" aria-label="Body Hue Slider">
+        </div>
+      </div>
+      <div class="control-group">
+        <label for="Hands-hue">Hands Hue</label>
+        <div class="input-group">
+          <input type="number" id="Hands-hue-value" min="0" max="360" value="0" aria-label="Hands Hue Value">
+          <input type="range" id="Hands-hue" min="0" max="360" value="0" aria-label="Hands Hue Slider">
+        </div>
+      </div>
+      <div class="control-group">
+        <label for="Legs-hue">Legs Hue</label>
+        <div class="input-group">
+          <input type="number" id="Legs-hue-value" min="0" max="360" value="0" aria-label="Legs Hue Value">
+          <input type="range" id="Legs-hue" min="0" max="360" value="0" aria-label="Legs Hue Slider">
+        </div>
+      </div>
+      <div class="control-group">
+        <label for="Plates-hue">Plates Hue</label>
+        <div class="input-group">
+          <input type="number" id="Plates-hue-value" min="0" max="360" value="0" aria-label="Plates Hue Value">
+          <input type="range" id="Plates-hue" min="0" max="360" value="0" aria-label="Plates Hue Slider">
+        </div>
+      </div>
+      <!-- Button Group -->
+      <div class="button-group">
+        <button class="reset-button" id="reset-button" aria-label="Reset Hues">Reset</button>
+        <button class="randomize-button" id="randomize-button" aria-label="Randomize Hues">Randomize</button>
+        <button class="copy-url-button" id="copy-url-button" aria-label="Copy Current URL to Clipboard">
+          Copy URL
+          <span class="tooltip">URL Copied!</span>
+        </button>
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <label for="Plates-hue">Plates Hue</label>
-    <div class="input-group">
-      <input type="number" id="Plates-hue-value" min="0" max="360" value="0">
-      <input type="range" id="Plates-hue" min="0" max="360" value="0">
-    </div>
-  </div>
-  <!-- Button Group -->
-  <div class="button-group">
-    <button class="reset-button" id="reset-button">Reset</button>
-    <button class="randomize-button" id="randomize-button">Randomize</button>
-    <button class="copy-url-button" id="copy-url-button">
-      Copy URL
-      <span class="tooltip">URL Copied!</span>
-    </button>
   </div>
 </div>
 
@@ -202,7 +357,7 @@ function base64Decode(str) {
   return decoder.decode(bytes);
 }
 
-// Function to update the URL with current state
+// Function to update the URL with the current state
 function updateURL() {
   const state = {
     Body: document.getElementById('Body-hue').value,
@@ -216,7 +371,7 @@ function updateURL() {
   window.history.replaceState(null, '', newURL);
 }
 
-// Function to load state from URL
+// Function to load the state from the URL
 function loadStateFromURL() {
   const params = new URLSearchParams(window.location.search);
   const encodedState = params.get('state');
@@ -224,7 +379,7 @@ function loadStateFromURL() {
     try {
       const stateString = base64Decode(decodeURIComponent(encodedState));
       const state = JSON.parse(stateString);
-      // Set values for each layer
+      // Apply hue values to each layer
       ['Body', 'Hands', 'Legs', 'Plates'].forEach(layer => {
         if (state[layer] !== undefined && state[layer] >= 0 && state[layer] <= 360) {
           document.getElementById(`${layer}-hue`).value = state[layer];
@@ -238,40 +393,80 @@ function loadStateFromURL() {
   }
 }
 
-// Call loadStateFromURL on page load
-window.addEventListener('load', loadStateFromURL);
+// Function to save settings to localStorage
+function saveSettings() {
+  const state = {
+    Body: document.getElementById('Body-hue').value,
+    Hands: document.getElementById('Hands-hue').value,
+    Legs: document.getElementById('Legs-hue').value,
+    Plates: document.getElementById('Plates-hue').value
+  };
+  localStorage.setItem('hueSettings', JSON.stringify(state));
+}
+
+// Function to load settings from localStorage
+function loadSettings() {
+  const savedState = localStorage.getItem('hueSettings');
+  if (savedState) {
+    try {
+      const state = JSON.parse(savedState);
+      ['Body', 'Hands', 'Legs', 'Plates'].forEach(layer => {
+        if (state[layer] !== undefined && state[layer] >= 0 && state[layer] <= 360) {
+          document.getElementById(`${layer}-hue`).value = state[layer];
+          document.getElementById(`${layer}-hue-value`).value = state[layer];
+          document.getElementById(layer).style.filter = `hue-rotate(${state[layer]}deg)`;
+        }
+      });
+    } catch (e) {
+      console.error('Failed to load settings from localStorage:', e);
+    }
+  }
+}
+
+// Initialize on page load
+window.addEventListener('load', () => {
+  loadStateFromURL(); // First load from URL
+  loadSettings();     // Then load from localStorage if available
+});
 
 const layers = ['Body', 'Hands', 'Legs', 'Plates'];
 
+// Function to update hue and save settings
+const updateHue = (value, layer) => {
+  document.getElementById(layer).style.filter = `hue-rotate(${value}deg)`;
+  updateURL();      // Update URL
+  saveSettings();   // Save to localStorage
+};
+
+// Set up event listeners for each layer
 layers.forEach(layer => {
   const slider = document.getElementById(`${layer}-hue`);
   const numberInput = document.getElementById(`${layer}-hue-value`);
   const image = document.getElementById(layer);
 
-  // Function to update the image hue
-  const updateHue = (value) => {
-    image.style.filter = `hue-rotate(${value}deg)`;
-    updateURL(); // Update URL whenever hue changes
+  // Handle hue changes
+  const handleHueChange = (value) => {
+    updateHue(value, layer);
   };
 
-  // Sync slider and number input when slider changes
+  // Sync slider with number input and image
   slider.addEventListener('input', () => {
     const value = slider.value;
     numberInput.value = value;
-    updateHue(value);
+    handleHueChange(value);
   });
 
-  // Sync slider and number input when number input changes
+  // Sync number input with slider and image
   numberInput.addEventListener('input', () => {
     let value = numberInput.value;
     if (value === '') return; // Prevent empty input
-    value = Math.min(Math.max(value, 0), 360); // Clamp between 0 and 360
+    value = Math.min(Math.max(value, 0), 360); // Clamp value between 0 and 360
     numberInput.value = value;
     slider.value = value;
-    updateHue(value);
+    handleHueChange(value);
   });
 
-  // Optional: Handle Enter key in number input to update slider
+  // Handle Enter key in number input
   numberInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
       numberInput.blur();
@@ -279,7 +474,7 @@ layers.forEach(layer => {
   });
 });
 
-// Reset Button Functionality
+// Reset button functionality
 document.getElementById('reset-button').addEventListener('click', () => {
   layers.forEach(layer => {
     const slider = document.getElementById(`${layer}-hue`);
@@ -288,11 +483,13 @@ document.getElementById('reset-button').addEventListener('click', () => {
     slider.value = 0;
     numberInput.value = 0;
     image.style.filter = `hue-rotate(0deg)`;
+    updateHue(0, layer);
   });
-  updateURL(); // Update URL after reset
+  updateURL();
+  saveSettings();
 });
 
-// Randomize Button Functionality
+// Randomize button functionality
 document.getElementById('randomize-button').addEventListener('click', () => {
   layers.forEach(layer => {
     const slider = document.getElementById(`${layer}-hue`);
@@ -302,40 +499,69 @@ document.getElementById('randomize-button').addEventListener('click', () => {
     slider.value = randomValue;
     numberInput.value = randomValue;
     image.style.filter = `hue-rotate(${randomValue}deg)`;
+    updateHue(randomValue, layer);
   });
-  updateURL(); // Update URL after randomization
+  updateURL();
+  saveSettings();
 });
 
-// Copy URL Button Functionality
+// Copy URL button functionality
 document.getElementById('copy-url-button').addEventListener('click', () => {
   const currentURL = window.location.href;
 
-  // Create a temporary textarea to hold the URL
-  const tempTextArea = document.createElement('textarea');
-  tempTextArea.value = currentURL;
-  document.body.appendChild(tempTextArea);
-  tempTextArea.select();
-  tempTextArea.setSelectionRange(0, 99999); // For mobile devices
-
-  try {
-    const successful = document.execCommand('copy');
-    if (successful) {
+  // Use Clipboard API for modern browsers
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(currentURL).then(() => {
       // Show tooltip
       const copyButton = document.getElementById('copy-url-button');
       copyButton.classList.add('show-tooltip');
       setTimeout(() => {
         copyButton.classList.remove('show-tooltip');
       }, 2000); // Hide tooltip after 2 seconds
-    } else {
-      alert('Failed to copy URL.');
-    }
-  } catch (err) {
-    console.error('Error copying URL:', err);
-    alert('Error copying URL.');
-  }
 
-  // Remove the temporary textarea
-  document.body.removeChild(tempTextArea);
+      // Disable button temporarily to prevent multiple clicks
+      copyButton.disabled = true;
+      setTimeout(() => {
+        copyButton.disabled = false;
+      }, 2000); // Re-enable after 2 seconds
+    }).catch(err => {
+      console.error('Error copying URL:', err);
+      alert('Failed to copy URL.');
+    });
+  } else {
+    // Fallback for older browsers
+    const tempTextArea = document.createElement('textarea');
+    tempTextArea.value = currentURL;
+    document.body.appendChild(tempTextArea);
+    tempTextArea.select();
+    tempTextArea.setSelectionRange(0, 99999); // For mobile devices
+
+    try {
+      const successful = document.execCommand('copy');
+      if (successful) {
+        // Show tooltip
+        const copyButton = document.getElementById('copy-url-button');
+        copyButton.classList.add('show-tooltip');
+        setTimeout(() => {
+          copyButton.classList.remove('show-tooltip');
+        }, 2000); // Hide tooltip after 2 seconds
+
+        // Disable button temporarily to prevent multiple clicks
+        copyButton.disabled = true;
+        setTimeout(() => {
+          copyButton.disabled = false;
+        }, 2000); // Re-enable after 2 seconds
+      } else {
+        alert('Failed to copy URL.');
+      }
+    } catch (err) {
+      console.error('Error copying URL:', err);
+      alert('Error copying URL.');
+    }
+
+    // Remove temporary textarea
+    document.body.removeChild(tempTextArea);
+  }
 });
 </script>
 </body>
