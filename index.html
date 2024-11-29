@@ -361,16 +361,26 @@
 </div>
 
 <script>
-// Functions for Base64 encoding/decoding with Unicode support
-function base64Encode(str) {
+// Functions for URL-safe Base64 encoding/decoding with Unicode support
+function base64UrlEncode(str) {
   const encoder = new TextEncoder();
   const bytes = encoder.encode(str);
   let binary = '';
   bytes.forEach((b) => binary += String.fromCharCode(b));
-  return btoa(binary);
+  return btoa(binary)
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
 }
 
-function base64Decode(str) {
+function base64UrlDecode(str) {
+  str = str
+    .replace(/-/g, '+')
+    .replace(/_/g, '/');
+  // Pad with '=' to make the length a multiple of 4
+  while (str.length % 4) {
+    str += '=';
+  }
   const binary = atob(str);
   const bytes = new Uint8Array(binary.length);
   for (let i = 0; i < binary.length; i++) {
@@ -389,7 +399,7 @@ function updateURL() {
     Plates: document.getElementById('Plates-hue').value
   };
   const stateString = JSON.stringify(state);
-  const encodedState = base64Encode(stateString);
+  const encodedState = base64UrlEncode(stateString);
   const newURL = window.location.origin + window.location.pathname + '?state=' + encodeURIComponent(encodedState);
   window.history.replaceState(null, '', newURL);
 }
@@ -400,7 +410,7 @@ function loadStateFromURL() {
   const encodedState = params.get('state');
   if (encodedState) {
     try {
-      const stateString = base64Decode(decodeURIComponent(encodedState));
+      const stateString = base64UrlDecode(decodeURIComponent(encodedState));
       const state = JSON.parse(stateString);
       // Apply hue values to each layer
       ['Body', 'Hands', 'Legs', 'Plates'].forEach(layer => {
