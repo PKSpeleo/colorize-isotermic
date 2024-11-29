@@ -187,15 +187,6 @@
       background-color: #1E88E5;
   }
 
-  /* Screenshot Button Styles */
-  .screenshot-button {
-      background-color: #FF9800; /* Orange color */
-  }
-
-  .screenshot-button:hover {
-      background-color: #FB8C00;
-  }
-
   /* Tooltip for copy confirmation */
   .tooltip {
       visibility: hidden;
@@ -224,8 +215,7 @@
       border-color: #333333 transparent transparent transparent; /* Arrow */
   }
 
-  .button-group button.copy-url-button.show-tooltip .tooltip,
-  .button-group button.screenshot-button.show-tooltip .tooltip {
+  .button-group button.copy-url-button.show-tooltip .tooltip {
       visibility: visible;
       opacity: 1;
   }
@@ -360,8 +350,6 @@
           Copy URL
           <span class="tooltip">URL Copied!</span>
         </button>
-        <!-- New Screenshot Button -->
-        <button class="screenshot-button" id="screenshot-button" aria-label="Download Screenshot">Download Screenshot</button>
       </div>
     </div>
   </div>
@@ -371,9 +359,6 @@
 <div class="footer">
   <p>View ColorizeIsotermic on <a href="https://github.com/PKSpeleo/colorize-isotermic" target="_blank">GitHub</a></p>
 </div>
-
-<!-- Include html2canvas Library -->
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
 // Functions for URL-safe Base64 encoding/decoding with Unicode support
@@ -610,33 +595,6 @@ document.getElementById('copy-url-button').addEventListener('click', () => {
     // Remove temporary textarea
     document.body.removeChild(tempTextArea);
   }
-});
-
-// Screenshot button functionality
-document.getElementById('screenshot-button').addEventListener('click', () => {
-  const mainContent = document.querySelector('.main-content');
-
-  // Use html2canvas to capture the main-content element
-  html2canvas(mainContent, {
-    useCORS: true, // Enable cross-origin images if necessary
-    scale: 2,       // Increase scale for better resolution
-    logging: true,  // Enable logging for debugging
-    scrollY: -window.scrollY // Handle fixed elements
-  }).then(canvas => {
-    // Convert the canvas to a data URL in JPEG format
-    canvas.toBlob(blob => {
-      // Create a temporary link element
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'colorize-isotermic-screenshot.jpg';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }, 'image/jpeg', 0.95); // 0.95 quality for JPEG
-  }).catch(err => {
-    console.error('Error capturing screenshot:', err);
-    alert('Failed to capture screenshot.');
-  });
 });
 </script>
 </body>
