@@ -61,6 +61,41 @@
   .input-group input[type="range"] {
       flex: 1;
   }
+  /* Button Styles */
+  .button-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+  }
+  .button-group button {
+      flex: 1;
+      padding: 10px 15px;
+      margin: 0 5px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      transition: background-color 0.3s ease;
+  }
+  .button-group button:first-child {
+      margin-left: 0;
+  }
+  .button-group button:last-child {
+      margin-right: 0;
+  }
+  .reset-button {
+      background-color: #ff4d4d;
+  }
+  .reset-button:hover {
+      background-color: #e60000;
+  }
+  .randomize-button {
+      background-color: #4CAF50;
+  }
+  .randomize-button:hover {
+      background-color: #45a049;
+  }
   </style>
 </head>
 <body>
@@ -99,6 +134,11 @@
       <input type="range" id="Plates-hue" min="0" max="360" value="0">
     </div>
   </div>
+  <!-- Button Group -->
+  <div class="button-group">
+    <button class="reset-button" id="reset-button">Reset</button>
+    <button class="randomize-button" id="randomize-button">Randomize</button>
+  </div>
 </div>
 
 <script>
@@ -136,6 +176,31 @@ layers.forEach(layer => {
     if (e.key === 'Enter') {
       numberInput.blur();
     }
+  });
+});
+
+// Reset Button Functionality
+document.getElementById('reset-button').addEventListener('click', () => {
+  layers.forEach(layer => {
+    const slider = document.getElementById(`${layer}-hue`);
+    const numberInput = document.getElementById(`${layer}-hue-value`);
+    const image = document.getElementById(layer);
+    slider.value = 0;
+    numberInput.value = 0;
+    image.style.filter = `hue-rotate(0deg)`;
+  });
+});
+
+// Randomize Button Functionality
+document.getElementById('randomize-button').addEventListener('click', () => {
+  layers.forEach(layer => {
+    const slider = document.getElementById(`${layer}-hue`);
+    const numberInput = document.getElementById(`${layer}-hue-value`);
+    const image = document.getElementById(layer);
+    const randomValue = Math.floor(Math.random() * 361); // 0 to 360 inclusive
+    slider.value = randomValue;
+    numberInput.value = randomValue;
+    image.style.filter = `hue-rotate(${randomValue}deg)`;
   });
 });
 </script>
