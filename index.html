@@ -142,6 +142,64 @@
 </div>
 
 <script>
+// Functions for Base64 encoding/decoding with Unicode support
+function base64Encode(str) {
+  const encoder = new TextEncoder();
+  const bytes = encoder.encode(str);
+  let binary = '';
+  bytes.forEach((b) => binary += String.fromCharCode(b));
+  return btoa(binary);
+}
+
+function base64Decode(str) {
+  const binary = atob(str);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  const decoder = new TextDecoder();
+  return decoder.decode(bytes);
+}
+
+// Function to update the URL with current state
+function updateURL() {
+  const state = {
+    Body: document.getElementById('Body-hue').value,
+    Hands: document.getElementById('Hands-hue').value,
+    Legs: document.getElementById('Legs-hue').value,
+    Plates: document.getElementById('Plates-hue').value
+  };
+  const stateString = JSON.stringify(state);
+  const encodedState = base64Encode(stateString);
+  const newURL = window.location.origin + window.location.pathname + '?state=' + encodeURIComponent(encodedState);
+  window.history.replaceState(null, '', newURL);
+}
+
+// Function to load state from URL
+function loadStateFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const encodedState = params.get('state');
+  if (encodedState) {
+    try {
+      const stateString = base64Decode(decodeURIComponent(encodedState));
+      const state = JSON.parse(stateString);
+      // Set values for each layer
+      ['Body', 'Hands', 'Legs', 'Plates'].forEach(layer => {
+        if (state[layer] !== undefined && state[layer] >= 0 && state[layer] <= 360) {
+          document.getElementById(`${layer}-hue`).value = state[layer];
+          document.getElementById(`${layer}-hue-value`).value = state[layer];
+          document.getElementById(layer).style.filter = `hue-rotate(${state[layer]}deg)`;
+        }
+      });
+    } catch (e) {
+      console.error('Failed to load state from URL:', e);
+    }
+  }
+}
+
+// Call loadStateFromURL on page load
+window.addEventListener('load', loadStateFromURL);
+
 const layers = ['Body', 'Hands', 'Legs', 'Plates'];
 
 layers.forEach(layer => {
@@ -152,6 +210,7 @@ layers.forEach(layer => {
   // Function to update the image hue
   const updateHue = (value) => {
     image.style.filter = `hue-rotate(${value}deg)`;
+    updateURL(); // Update URL whenever hue changes
   };
 
   // Sync slider and number input when slider changes
@@ -189,6 +248,7 @@ document.getElementById('reset-button').addEventListener('click', () => {
     numberInput.value = 0;
     image.style.filter = `hue-rotate(0deg)`;
   });
+  updateURL(); // Update URL after reset
 });
 
 // Randomize Button Functionality
@@ -197,11 +257,12 @@ document.getElementById('randomize-button').addEventListener('click', () => {
     const slider = document.getElementById(`${layer}-hue`);
     const numberInput = document.getElementById(`${layer}-hue-value`);
     const image = document.getElementById(layer);
-    const randomValue = Math.floor(Math.random() * 361); // 0 to 360 inclusive
+    const randomValue = Math.floor(Math.random() * 361); // Random value between 0 and 360 inclusive
     slider.value = randomValue;
     numberInput.value = randomValue;
     image.style.filter = `hue-rotate(${randomValue}deg)`;
   });
+  updateURL(); // Update URL after randomization
 });
 </script>
 </body>
