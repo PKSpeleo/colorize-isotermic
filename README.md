@@ -1,7 +1,7 @@
 
 # Colorize Isotermic
 
-Online: [Colorize Isotermic Demo](https://github.com/PKSpeleo/colorize-isotermic)
+Online: [Colorize Isotermic Demo](https://pkspeleo.github.io/colorize-isotermic)
 
 **Colorize Isotermic** is a simple web application that allows users to customize the colors of various parts of thermal clothing for spelunkers (or other outdoor enthusiasts). The application enables users to adjust hues in real-time and share their personalized configurations using a shareable link.
 
@@ -17,7 +17,7 @@ Online: [Colorize Isotermic Demo](https://github.com/PKSpeleo/colorize-isotermic
 
 ## Demo
 
-Check out the live demo: [Colorize Isotermic Demo](https://github.com/PKSpeleo/colorize-isotermic)
+Check out the live demo: [Colorize Isotermic Demo](https://pkspeleo.github.io/colorize-isotermic)
 
 ## Features
 
@@ -42,7 +42,7 @@ Check out the live demo: [Colorize Isotermic Demo](https://github.com/PKSpeleo/c
 
 ## Usage
 
-1. Open the Application: Visit the [Colorize Isotermic Demo](https://github.com/PKSpeleo/colorize-isotermic).
+1. Open the Application: Visit the [Colorize Isotermic Demo](https://pkspeleo.github.io/colorize-isotermic).
 2. Adjust the Hues: Use the sliders or input fields to set the hue values for each clothing layer. The preview updates in real-time to reflect your changes.
 3. Reset or Randomize: Click **Reset** to restore default settings. Click **Randomize** to apply random hues to all layers.
 4. Share Your Configuration: Click the **Copy URL** button to copy a shareable link. Share the link with others, and they will see the same colors and settings when they open it.
