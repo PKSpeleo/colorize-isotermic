@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Adjust Layer Hues</title>
+  <style>
+  body {
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+  }
+  #image-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+  }
+  #image-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: auto;
+  }
+  /* Set z-index values as per your earlier request */
+  #Body {
+      z-index: 1;
+  }
+  #Legs {
+      z-index: 2;
+  }
+  #Hands {
+      z-index: 3;
+  }
+  #Plates {
+      z-index: 4;
+  }
+  #controls {
+      width: 300px;
+      padding: 20px;
+      box-sizing: border-box;
+      background-color: #f0f0f0;
+  }
+  .control-group {
+      margin-bottom: 20px;
+  }
+  .control-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+  }
+  .control-group input[type="range"] {
+      width: 100%;
+  }
+  </style>
+</head>
+<body>
+<div id="image-container">
+  <img id="Body" src="Body.png" alt="Body">
+  <img id="Legs" src="Legs.png" alt="Legs">
+  <img id="Hands" src="Hands.png" alt="Hands">
+  <img id="Plates" src="Plates.png" alt="Plates">
+</div>
+<div id="controls">
+  <div class="control-group">
+    <label for="Body-hue">Body Hue</label>
+    <input type="range" id="Body-hue" min="0" max="360" value="0">
+  </div>
+  <div class="control-group">
+    <label for="Hands-hue">Hands Hue</label>
+    <input type="range" id="Hands-hue" min="0" max="360" value="0">
+  </div>
+  <div class="control-group">
+    <label for="Legs-hue">Legs Hue</label>
+    <input type="range" id="Legs-hue" min="0" max="360" value="0">
+  </div>
+  <div class="control-group">
+    <label for="Plates-hue">Plates Hue</label>
+    <input type="range" id="Plates-hue" min="0" max="360" value="0">
+  </div>
+</div>
+
+<script>
+const layers = ['Body', 'Hands', 'Legs', 'Plates'];
+
+layers.forEach(layer => {
+  const slider = document.getElementById(`${layer}-hue`);
+  const image = document.getElementById(layer);
+
+  slider.addEventListener('input', () => {
+    image.style.filter = `hue-rotate(${slider.value}deg)`;
+  });
+});
+</script>
+</body>
+</html>
