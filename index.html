@@ -361,13 +361,18 @@
 </div>
 
 <script>
+// Declare the layers array at the beginning of the script
+const layers = ['Body', 'Hands', 'Legs', 'Plates'];
+
 // Function to update the URL with the current state using individual query parameters
 function updateURL() {
-  const params = new URLSearchParams(window.location.search);
-  params.set('Body', document.getElementById('Body-hue').value);
-  params.set('Hands', document.getElementById('Hands-hue').value);
-  params.set('Legs', document.getElementById('Legs-hue').value);
-  params.set('Plates', document.getElementById('Plates-hue').value);
+  const params = new URLSearchParams();
+
+  layers.forEach(layer => {
+    const value = document.getElementById(`${layer}-hue`).value;
+    params.set(layer, value);
+  });
+
   const newURL = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
   window.history.replaceState(null, '', newURL);
 }
@@ -375,63 +380,51 @@ function updateURL() {
 // Function to load the state from the URL
 function loadStateFromURL() {
   const params = new URLSearchParams(window.location.search);
-  ['Body', 'Hands', 'Legs', 'Plates'].forEach(layer => {
+  let needsUpdate = false; // Flag to determine if URL needs to be updated with defaults
+
+  layers.forEach(layer => {
     const value = params.get(layer);
+    const hueInput = document.getElementById(`${layer}-hue`);
+    const hueValueInput = document.getElementById(`${layer}-hue-value`);
+    const image = document.getElementById(layer);
+
     if (value !== null) {
       const hueValue = parseInt(value, 10);
       if (!isNaN(hueValue) && hueValue >= 0 && hueValue <= 360) {
-        document.getElementById(`${layer}-hue`).value = hueValue;
-        document.getElementById(`${layer}-hue-value`).value = hueValue;
-        document.getElementById(layer).style.filter = `hue-rotate(${hueValue}deg)`;
+        hueInput.value = hueValue;
+        hueValueInput.value = hueValue;
+        image.style.filter = `hue-rotate(${hueValue}deg)`;
+      } else {
+        // Invalid value, set to default
+        hueInput.value = 0;
+        hueValueInput.value = 0;
+        image.style.filter = `hue-rotate(0deg)`;
+        needsUpdate = true;
       }
+    } else {
+      // Parameter missing, set to default
+      hueInput.value = 0;
+      hueValueInput.value = 0;
+      image.style.filter = `hue-rotate(0deg)`;
+      needsUpdate = true;
     }
   });
-}
 
-// Function to save settings to localStorage
-function saveSettings() {
-  const state = {
-    Body: document.getElementById('Body-hue').value,
-    Hands: document.getElementById('Hands-hue').value,
-    Legs: document.getElementById('Legs-hue').value,
-    Plates: document.getElementById('Plates-hue').value
-  };
-  localStorage.setItem('hueSettings', JSON.stringify(state));
-}
-
-// Function to load settings from localStorage
-function loadSettings() {
-  const savedState = localStorage.getItem('hueSettings');
-  if (savedState) {
-    try {
-      const state = JSON.parse(savedState);
-      ['Body', 'Hands', 'Legs', 'Plates'].forEach(layer => {
-        if (state[layer] !== undefined && state[layer] >= 0 && state[layer] <= 360) {
-          document.getElementById(`${layer}-hue`).value = state[layer];
-          document.getElementById(`${layer}-hue-value`).value = state[layer];
-          document.getElementById(layer).style.filter = `hue-rotate(${state[layer]}deg)`;
-        }
-      });
-    } catch (e) {
-      console.error('Failed to load settings from localStorage:', e);
-    }
+  if (needsUpdate) {
+    updateURL(); // Update URL to reflect default values
   }
 }
 
-// Initialize on page load
-window.addEventListener('load', () => {
-  loadStateFromURL(); // First load from URL
-  loadSettings();     // Then load from localStorage if available
-});
-
-const layers = ['Body', 'Hands', 'Legs', 'Plates'];
-
 // Function to update hue and save settings
-const updateHue = (value, layer) => {
-  document.getElementById(layer).style.filter = `hue-rotate(${value}deg)`;
-  updateURL();      // Update URL
-  saveSettings();   // Save to localStorage
-};
+function updateHue(value, layer) {
+  const image = document.getElementById(layer);
+  if (image) {
+    image.style.filter = `hue-rotate(${value}deg)`;
+  } else {
+    console.error(`Image with ID "${layer}" not found.`);
+  }
+  updateURL(); // Update URL
+}
 
 // Set up event listeners for each layer
 layers.forEach(layer => {
@@ -439,26 +432,26 @@ layers.forEach(layer => {
   const numberInput = document.getElementById(`${layer}-hue-value`);
   const image = document.getElementById(layer);
 
-  // Handle hue changes
-  const handleHueChange = (value) => {
-    updateHue(value, layer);
-  };
+  if (!slider || !numberInput || !image) {
+    console.error(`One or more elements for layer "${layer}" are missing.`);
+    return;
+  }
 
-  // Sync slider with number input and image
+  // Handle hue changes from the slider
   slider.addEventListener('input', () => {
     const value = slider.value;
     numberInput.value = value;
-    handleHueChange(value);
+    updateHue(value, layer);
   });
 
-  // Sync number input with slider and image
+  // Handle hue changes from the number input
   numberInput.addEventListener('input', () => {
     let value = numberInput.value;
     if (value === '') return; // Prevent empty input
     value = Math.min(Math.max(value, 0), 360); // Clamp value between 0 and 360
     numberInput.value = value;
     slider.value = value;
-    handleHueChange(value);
+    updateHue(value, layer);
   });
 
   // Handle Enter key in number input
@@ -475,13 +468,14 @@ document.getElementById('reset-button').addEventListener('click', () => {
     const slider = document.getElementById(`${layer}-hue`);
     const numberInput = document.getElementById(`${layer}-hue-value`);
     const image = document.getElementById(layer);
+    if (!slider || !numberInput || !image) {
+      console.error(`One or more elements for layer "${layer}" are missing.`);
+      return;
+    }
     slider.value = 0;
     numberInput.value = 0;
-    image.style.filter = `hue-rotate(0deg)`;
     updateHue(0, layer);
   });
-  updateURL();
-  saveSettings();
 });
 
 // Randomize button functionality
@@ -490,14 +484,15 @@ document.getElementById('randomize-button').addEventListener('click', () => {
     const slider = document.getElementById(`${layer}-hue`);
     const numberInput = document.getElementById(`${layer}-hue-value`);
     const image = document.getElementById(layer);
+    if (!slider || !numberInput || !image) {
+      console.error(`One or more elements for layer "${layer}" are missing.`);
+      return;
+    }
     const randomValue = Math.floor(Math.random() * 361); // Random value between 0 and 360 inclusive
     slider.value = randomValue;
     numberInput.value = randomValue;
-    image.style.filter = `hue-rotate(${randomValue}deg)`;
     updateHue(randomValue, layer);
   });
-  updateURL();
-  saveSettings();
 });
 
 // Copy URL button functionality
@@ -557,6 +552,11 @@ document.getElementById('copy-url-button').addEventListener('click', () => {
     // Remove temporary textarea
     document.body.removeChild(tempTextArea);
   }
+});
+
+// Initialize on page load
+window.addEventListener('load', () => {
+  loadStateFromURL(); // Load state from URL
 });
 </script>
 </body>
