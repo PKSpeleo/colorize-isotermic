@@ -66,11 +66,12 @@
       display: flex;
       justify-content: space-between;
       margin-top: 20px;
+      flex-wrap: wrap; /* Allow buttons to wrap to the next line if necessary */
   }
   .button-group button {
-      flex: 1;
+      flex: 1 1 30%; /* Allow buttons to take up approximately 30% of the container */
       padding: 10px 15px;
-      margin: 0 5px;
+      margin: 5px; /* Add margin around buttons for spacing */
       font-size: 16px;
       cursor: pointer;
       border: none;
@@ -78,23 +79,59 @@
       color: #fff;
       transition: background-color 0.3s ease;
   }
-  .button-group button:first-child {
-      margin-left: 0;
-  }
-  .button-group button:last-child {
-      margin-right: 0;
-  }
-  .reset-button {
+  .button-group button:nth-child(1) {
+      /* Reset Button */
       background-color: #ff4d4d;
   }
-  .reset-button:hover {
+  .button-group button:nth-child(1):hover {
       background-color: #e60000;
   }
-  .randomize-button {
+  .button-group button:nth-child(2) {
+      /* Randomize Button */
       background-color: #4CAF50;
   }
-  .randomize-button:hover {
+  .button-group button:nth-child(2):hover {
       background-color: #45a049;
+  }
+  .button-group button:nth-child(3) {
+      /* Copy URL Button */
+      background-color: #007BFF;
+  }
+  .button-group button:nth-child(3):hover {
+      background-color: #0056b3;
+  }
+  /* Tooltip for copy confirmation */
+  .tooltip {
+      visibility: hidden;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 5px;
+      padding: 5px 10px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%; /* Position above the button */
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+  }
+  .tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%; /* At the bottom of the tooltip */
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 5px;
+      border-style: solid;
+      border-color: #333 transparent transparent transparent; /* Arrow */
+  }
+  .button-group button.copy-url-button {
+      position: relative; /* To position the tooltip */
+  }
+  .button-group button.copy-url-button.show-tooltip .tooltip {
+      visibility: visible;
+      opacity: 1;
   }
   </style>
 </head>
@@ -138,6 +175,10 @@
   <div class="button-group">
     <button class="reset-button" id="reset-button">Reset</button>
     <button class="randomize-button" id="randomize-button">Randomize</button>
+    <button class="copy-url-button" id="copy-url-button">
+      Copy URL
+      <span class="tooltip">URL Copied!</span>
+    </button>
   </div>
 </div>
 
@@ -263,6 +304,38 @@ document.getElementById('randomize-button').addEventListener('click', () => {
     image.style.filter = `hue-rotate(${randomValue}deg)`;
   });
   updateURL(); // Update URL after randomization
+});
+
+// Copy URL Button Functionality
+document.getElementById('copy-url-button').addEventListener('click', () => {
+  const currentURL = window.location.href;
+
+  // Create a temporary textarea to hold the URL
+  const tempTextArea = document.createElement('textarea');
+  tempTextArea.value = currentURL;
+  document.body.appendChild(tempTextArea);
+  tempTextArea.select();
+  tempTextArea.setSelectionRange(0, 99999); // For mobile devices
+
+  try {
+    const successful = document.execCommand('copy');
+    if (successful) {
+      // Show tooltip
+      const copyButton = document.getElementById('copy-url-button');
+      copyButton.classList.add('show-tooltip');
+      setTimeout(() => {
+        copyButton.classList.remove('show-tooltip');
+      }, 2000); // Hide tooltip after 2 seconds
+    } else {
+      alert('Failed to copy URL.');
+    }
+  } catch (err) {
+    console.error('Error copying URL:', err);
+    alert('Error copying URL.');
+  }
+
+  // Remove the temporary textarea
+  document.body.removeChild(tempTextArea);
 });
 </script>
 </body>
