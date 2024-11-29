@@ -40,6 +40,7 @@
       padding: 20px;
       box-sizing: border-box;
       background-color: #f0f0f0;
+      overflow-y: auto; /* Add scroll if content overflows */
   }
   .control-group {
       margin-bottom: 20px;
@@ -49,8 +50,16 @@
       margin-bottom: 5px;
       font-weight: bold;
   }
-  .control-group input[type="range"] {
-      width: 100%;
+  .input-group {
+      display: flex;
+      align-items: center;
+  }
+  .input-group input[type="number"] {
+      width: 60px;
+      margin-right: 10px;
+  }
+  .input-group input[type="range"] {
+      flex: 1;
   }
   </style>
 </head>
@@ -64,19 +73,31 @@
 <div id="controls">
   <div class="control-group">
     <label for="Body-hue">Body Hue</label>
-    <input type="range" id="Body-hue" min="0" max="360" value="0">
+    <div class="input-group">
+      <input type="number" id="Body-hue-value" min="0" max="360" value="0">
+      <input type="range" id="Body-hue" min="0" max="360" value="0">
+    </div>
   </div>
   <div class="control-group">
     <label for="Hands-hue">Hands Hue</label>
-    <input type="range" id="Hands-hue" min="0" max="360" value="0">
+    <div class="input-group">
+      <input type="number" id="Hands-hue-value" min="0" max="360" value="0">
+      <input type="range" id="Hands-hue" min="0" max="360" value="0">
+    </div>
   </div>
   <div class="control-group">
     <label for="Legs-hue">Legs Hue</label>
-    <input type="range" id="Legs-hue" min="0" max="360" value="0">
+    <div class="input-group">
+      <input type="number" id="Legs-hue-value" min="0" max="360" value="0">
+      <input type="range" id="Legs-hue" min="0" max="360" value="0">
+    </div>
   </div>
   <div class="control-group">
     <label for="Plates-hue">Plates Hue</label>
-    <input type="range" id="Plates-hue" min="0" max="360" value="0">
+    <div class="input-group">
+      <input type="number" id="Plates-hue-value" min="0" max="360" value="0">
+      <input type="range" id="Plates-hue" min="0" max="360" value="0">
+    </div>
   </div>
 </div>
 
@@ -85,10 +106,36 @@ const layers = ['Body', 'Hands', 'Legs', 'Plates'];
 
 layers.forEach(layer => {
   const slider = document.getElementById(`${layer}-hue`);
+  const numberInput = document.getElementById(`${layer}-hue-value`);
   const image = document.getElementById(layer);
 
+  // Function to update the image hue
+  const updateHue = (value) => {
+    image.style.filter = `hue-rotate(${value}deg)`;
+  };
+
+  // Sync slider and number input when slider changes
   slider.addEventListener('input', () => {
-    image.style.filter = `hue-rotate(${slider.value}deg)`;
+    const value = slider.value;
+    numberInput.value = value;
+    updateHue(value);
+  });
+
+  // Sync slider and number input when number input changes
+  numberInput.addEventListener('input', () => {
+    let value = numberInput.value;
+    if (value === '') return; // Prevent empty input
+    value = Math.min(Math.max(value, 0), 360); // Clamp between 0 and 360
+    numberInput.value = value;
+    slider.value = value;
+    updateHue(value);
+  });
+
+  // Optional: Handle Enter key in number input to update slider
+  numberInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      numberInput.blur();
+    }
   });
 });
 </script>
